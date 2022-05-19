@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h3>[WIP] Просмотр заметки</h3><br/>
+
+  {{ note.id }}<br/>
+  {{ note.user_id }}<br/>
+  {{ note.title }}<br/>
+  {{ note.text }}<br/>
+  {{ note.dt_added }}<br/>
+  {{ note.dt_edited }}<br/>
+{% endblock %}

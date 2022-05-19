@@ -1,11 +1,11 @@
 from urllib.parse import urlparse, urljoin
 from flask import Flask, render_template, flash, redirect, url_for, request, abort
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField, BooleanField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 
-from db import User
+from db import User, Note
 
 
 app = Flask(__name__)
@@ -19,18 +19,24 @@ login_manager.login_message = 'Войдите, чтобы просматрива
 
 
 class RegisterForm(FlaskForm):
-    email = StringField('Эл. почта', validators=[DataRequired(), Email()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
+    email = StringField(validators=[DataRequired(), Email()])
+    password = PasswordField(validators=[DataRequired()])
     # TODO: confirm password
-    # password2 = PasswordField('Confirm password', validators=[DataRequired()])
+    # password2 = PasswordField(validators=[DataRequired()])
     submit = SubmitField('Зарегистрироваться')
 
 
 class LoginForm(FlaskForm):
-    email = StringField('Эл. почта', validators=[DataRequired(), Email()])
-    password = PasswordField('Пароль', validators=[DataRequired()])
-    rememberme = BooleanField('Запомнить меня')
+    email = StringField(validators=[DataRequired(), Email()])
+    password = PasswordField(validators=[DataRequired()])
+    rememberme = BooleanField()
     submit = SubmitField('Войти')
+
+
+class NoteForm(FlaskForm):
+    title = StringField()
+    text = TextAreaField()
+    submit = SubmitField('Создать')
 
 
 def is_safe_url(target):
@@ -119,6 +125,34 @@ def logout():
 @login_required
 def account():
     return render_template('account.html')
+
+
+@app.route('/notes')
+@login_required
+def notes_page():
+    notes = Note.get_user_notes(current_user.id)
+    return render_template('notes.html', notes=notes)
+
+
+@app.route('/note/<int:note_id>')
+@login_required
+def note_page(note_id):
+    note = Note.get_note(note_id)
+    if note is None or note.user_id != current_user.id:
+        return abort(404)
+    return render_template('note.html', note=note)
+
+
+@app.route('/add-note', methods=['GET', 'POST'])
+@login_required
+def add_note():
+    form = NoteForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        text = form.text.data
+        note = Note.add_note(current_user.id, title, text)
+        return redirect(url_for('note_page', note_id=note.id))
+    return render_template('add_note.html', form=form)
 
 
 app.run('0.0.0.0', 80, True)
