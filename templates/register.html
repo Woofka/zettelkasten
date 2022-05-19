@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="card">
+    <h5 class="card-header">Вход</h5>
+    <div class="card-body">
+        <form method="POST">
+          {{ form.hidden_tag() }}
+
+          <div class="mb-3">
+            <label for="email" class="form-label">Электронная почта</label>
+            {{ form.email(class="form-control", type="email") }}
+            <!--
+            aria-describedby="email_help"
+            <div id="email_help" class="form-text">We'll never share your email with anyone else.</div>
+            -->
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Пароль [TODO: repeat]</label>
+            {{ form.password(type="password", class="form-control") }}
+          </div>
+
+          {{ form.submit(class='btn btn-secondary') }}
+        </form>
+    </div>
+  </div>
+{% endblock %}
