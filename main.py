@@ -75,6 +75,9 @@ def register():
             user = User.add_user(email, password)
             form.email.data = ''
             form.password.data = ''
+            login_user(user)
+            flash('Вы были успешно зарегистированы!')
+            return redirect(url_for('index'))
     # TODO: else (if not valid)
 
     return render_template('register.html', form=form, email=email)
