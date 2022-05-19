@@ -30,17 +30,20 @@ class User(UserMixin):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = r"select id from users where email = %s and password_hash = crypt(%s, password_hash);"
+        query = r"select id, email, password_hash, dt_added " \
+                r"from users " \
+                r"where email = %s and password_hash = crypt(%s, password_hash);"
         cursor.execute(query, (email, password))
         result = cursor.fetchone()
+        if result is None:
+            user = None
+        else:
+            user = User(result[0], result[1], result[2], result[3])
 
         cursor.close()
         conn.close()
 
-        if result is None:
-            return None
-        else:
-            return User.get_user_by_email(email)
+        return user
 
     @staticmethod
     def is_email_used(email):
@@ -65,35 +68,21 @@ class User(UserMixin):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = r"insert into users (email, password_hash, dt_added) values (%s, crypt(%s, gen_salt('bf')), %s);"
-        cursor.execute(query, (email, password, datetime.now()))
+        query = r"insert into users (email, password_hash, dt_added) " \
+                r"values (%s, crypt(%s, gen_salt('bf')), %s) " \
+                r"returning id, password_hash;"
+        dt_added = datetime.now()
+        cursor.execute(query, (email, password, dt_added))
+        user_id, password_hash = cursor.fetchone()
 
         conn.commit()
         cursor.close()
         conn.close()
 
-        return User.get_user_by_email(email)
+        return User(user_id, email, password_hash, dt_added)
 
     @staticmethod
-    def get_user_by_email(email):
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        query = r"select id, email, password_hash, dt_added from users where email = %s;"
-        cursor.execute(query, (email,))
-        result = cursor.fetchone()
-        if result is None:
-            user = None
-        else:
-            user = User(result[0], result[1], result[2], result[3])
-
-        cursor.close()
-        conn.close()
-
-        return user
-
-    @staticmethod
-    def get_user_by_id(user_id):
+    def get_user(user_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
