@@ -12,6 +12,13 @@
         {{ note.title }}
       </a>
       <div class="card-body">
+        {% if note.tags %}
+          <div class="mb-3">
+          {% for tag in note.tags %}
+          <a href="#" class="btn btn-sm btn-secondary rounded-pill px-3 mb-1">{{ tag.tag_str }}</a>
+          {% endfor %}
+          </div>
+        {% endif %}
         <p class="card-text">{{ note.text }}</p>
         <p class="card-text text-muted">
           Note id: {{ note.id }} | User id: {{ note.user_id }} | Local id: {{ note.local_id }} | Added: {{ note.dt_added }} | Edited: {{ note.dt_edited }}

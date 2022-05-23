@@ -19,6 +19,12 @@
             {{ form.text(class="form-control") }}
           </div>
 
+          <div class="mb-3">
+            <label for="tags" class="form-label">Теги</label>
+            {{ form.tags(class="form-control") }}
+            <div class="form-text">Вводите теги на разных строчках</div>
+          </div>
+
           {{ form.submit(class='btn btn-success') }}
         </form>
     </div>

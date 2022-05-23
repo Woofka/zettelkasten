@@ -36,6 +36,7 @@ class LoginForm(FlaskForm):
 class NoteForm(FlaskForm):
     title = StringField()
     text = TextAreaField()
+    tags = TextAreaField()
     submit = SubmitField('Создать')
 
 
@@ -144,6 +145,18 @@ def note_page(note_local_id):
     return render_template('note.html', note=note)
 
 
+def parse_tags(tags_data):
+    tags_data = tags_data.strip().split('\n')
+    tags_str = []
+    for _str in tags_data:
+        _str = _str.strip()
+        if len(_str) > 50:
+            return None
+        if len(_str) > 0:
+            tags_str.append(_str)
+    return tags_str
+
+
 @app.route('/add-note', methods=['GET', 'POST'])
 @login_required
 def add_note():
@@ -151,9 +164,13 @@ def add_note():
     if form.validate_on_submit():
         title = form.title.data
         text = form.text.data
-        # TODO: tags
-        note = Note.add_note(current_user.id, title, text, set())
-        return redirect(url_for('note_page', note_local_id=note.local_id))
+        tags_data = form.tags.data
+        tags_str = parse_tags(tags_data)
+        if tags_str is None:
+            flash('Тег не должен быть длинее 50 символов')
+        else:
+            note = Note.add_note(current_user.id, title, text, tags_str)
+            return redirect(url_for('note_page', note_local_id=note.local_id))
     return render_template('add_note.html', form=form)
 
 
