@@ -3,6 +3,12 @@
 {% block content %}
   <h3>[WIP] Просмотр заметки</h3><br/>
 
+  <br/>
+  <a href="{{url_for('edit_note', note_local_id=note.local_id)}}">Изменить</a>
+  <br/>
+  <a href="{{url_for('delete_note', note_local_id=note.local_id)}}">Удалить</a>
+  <br/><br/>
+
   {{ note.id }}<br/>
   {{ note.user_id }}<br/>
   {{ note.local_id }}<br/>

@@ -389,8 +389,8 @@ def pn(n):
             print(' ', t.id, t.user_id, t.tag_str)
 
 
-note = Note.get_note(3, 4)
-pn(note)
+# note = Note.get_note(3, 4)
+# pn(note)
 
 # notes = Note.get_user_notes(3)
 # for i in notes:

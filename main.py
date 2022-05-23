@@ -174,4 +174,49 @@ def add_note():
     return render_template('add_note.html', form=form)
 
 
+@app.route('/edit-note/<int:note_local_id>', methods=['GET', 'POST'])
+@login_required
+def edit_note(note_local_id):
+    note = Note.get_note(current_user.id, note_local_id)
+    if note is None:
+        flash('Нет заметки с таким идентификатором')
+        return abort(404)
+
+    form = NoteForm(
+        title=note.title,
+        text=note.text,
+        tags='\n'.join([t.tag_str for t in note.tags])
+    )
+    form.submit.label.text = 'Сохранить'
+
+    if form.validate_on_submit():
+        title = form.title.data
+        text = form.text.data
+        tags_data = form.tags.data
+        tags_str = parse_tags(tags_data)
+        if tags_str is None:
+            flash('Тег не должен быть длинее 50 символов')
+        else:
+            note = Note.update_note(note, title, text, tags_str)
+            if note is None:
+                flash('Нет изменений. Заметка осталась прежней')
+            else:
+                flash('Изменения сохранены')
+            return redirect(url_for('note_page', note_local_id=note_local_id))
+    return render_template('edit_note.html', form=form)
+
+
+@app.route('/delete-note/<int:note_local_id>', methods=['GET', 'POST'])
+@login_required
+def delete_note(note_local_id):
+    note = Note.get_note(current_user.id, note_local_id)
+    if note is None:
+        flash('Нет заметки с таким идентификатором')
+        return abort(404)
+
+    Note.delete_note(note.id)
+    flash('Заметка успешно удалена')
+    return redirect(url_for('notes_page'))
+
+
 app.run('0.0.0.0', 80, True)
