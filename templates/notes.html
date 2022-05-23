@@ -8,13 +8,13 @@
 
   {% for note in notes %}
     <div class="card mb-2">
-      <a class="card-header" href="{{ url_for('note_page', note_id=note.id) }}">
+      <a class="card-header" href="{{ url_for('note_page', note_local_id=note.local_id) }}">
         {{ note.title }}
       </a>
       <div class="card-body">
         <p class="card-text">{{ note.text }}</p>
         <p class="card-text text-muted">
-          Note id: {{ note.id }} | User id: {{ note.user_id }} | Added: {{ note.dt_added }} | Edited: {{ note.dt_edited }}
+          Note id: {{ note.id }} | User id: {{ note.user_id }} | Local id: {{ note.local_id }} | Added: {{ note.dt_added }} | Edited: {{ note.dt_edited }}
         </p>
       </div>
     </div>

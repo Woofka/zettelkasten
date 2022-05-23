@@ -134,11 +134,12 @@ def notes_page():
     return render_template('notes.html', notes=notes)
 
 
-@app.route('/note/<int:note_id>')
+@app.route('/note/<int:note_local_id>')
 @login_required
-def note_page(note_id):
-    note = Note.get_note(note_id)
-    if note is None or note.user_id != current_user.id:
+def note_page(note_local_id):
+    note = Note.get_note(current_user.id, note_local_id)
+    if note is None:
+        flash('Нет заметки с таким идентификатором')
         return abort(404)
     return render_template('note.html', note=note)
 
@@ -150,8 +151,9 @@ def add_note():
     if form.validate_on_submit():
         title = form.title.data
         text = form.text.data
-        note = Note.add_note(current_user.id, title, text)
-        return redirect(url_for('note_page', note_id=note.id))
+        # TODO: tags
+        note = Note.add_note(current_user.id, title, text, set())
+        return redirect(url_for('note_page', note_local_id=note.local_id))
     return render_template('add_note.html', form=form)
 
 

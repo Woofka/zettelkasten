@@ -226,9 +226,10 @@ class Tag:
 
 
 class Note:
-    def __init__(self, note_id, user_id, title, text, dt_added, dt_edited, tags):
+    def __init__(self, note_id, user_id, local_id, title, text, dt_added, dt_edited, tags):
         self.id = note_id
         self.user_id = user_id
+        self.local_id = local_id
         self.title = title
         self.text = text
         self.dt_added = dt_added
@@ -243,12 +244,14 @@ class Note:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = r"insert into notes (user_id, title, text, dt_added) " \
-                r"values (%s, %s, %s, %s) " \
-                r"returning id;"
+        query = r"insert into notes (user_id, local_id, title, text, dt_added) " \
+                r"values (%s, " \
+                r"(select coalesce(max(local_id),0) from notes where user_id = %s)+1, " \
+                r"%s, %s, %s) " \
+                r"returning id, local_id;"
         dt_added = datetime.now()
-        cursor.execute(query, (user_id, title, text, dt_added))
-        note_id = cursor.fetchone()[0]
+        cursor.execute(query, (user_id, user_id, title, text, dt_added))
+        note_id, note_local_id = cursor.fetchone()
 
         tags = set()
         for tag_str in tags_str:
@@ -259,7 +262,7 @@ class Note:
         cursor.close()
         conn.close()
 
-        return Note(note_id, user_id, title, text, dt_added, None, tags)
+        return Note(note_id, user_id, note_local_id, title, text, dt_added, None, tags)
 
     @staticmethod
     def update_note(note, new_title, new_text, new_tags_str_list):
@@ -329,21 +332,21 @@ class Note:
         conn.close()
 
     @staticmethod
-    def get_note(note_id):
+    def get_note(user_id, note_local_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = r"select id, user_id, title, text, dt_added, dt_edited " \
+        query = r"select id, user_id, local_id, title, text, dt_added, dt_edited " \
                 r"from notes " \
-                r"where id = %s;"
-        cursor.execute(query, (note_id,))
+                r"where user_id = %s and local_id = %s;"
+        cursor.execute(query, (user_id, note_local_id))
         result = cursor.fetchone()
 
         if result is None:
             note = None
         else:
-            tags = Tag.get_note_tags(note_id, conn_curs=(conn, cursor))
-            note = Note(result[0], result[1], result[2], result[3], result[4], result[5], tags)
+            tags = Tag.get_note_tags(result[0], conn_curs=(conn, cursor))
+            note = Note(result[0], result[1], result[2], result[3], result[4], result[5], result[6], tags)
 
         cursor.close()
         conn.close()
@@ -355,7 +358,7 @@ class Note:
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        query = r"select id, user_id, title, text, dt_added, dt_edited " \
+        query = r"select id, user_id, local_id, title, text, dt_added, dt_edited " \
                 r"from notes " \
                 r"where user_id = %s;"
         cursor.execute(query, (user_id,))
@@ -363,7 +366,7 @@ class Note:
         notes = []
         for row in result:
             tags = Tag.get_note_tags(row[0], conn_curs=(conn, cursor))
-            note = Note(row[0], row[1], row[2], row[3], row[4], row[5], tags)
+            note = Note(row[0], row[1], row[2], row[3], row[4], row[5], row[6], tags)
             notes.append(note)
 
         cursor.close()
@@ -378,7 +381,7 @@ class Note:
 # print(User.authenticate_user('test3@test.ru', '1234'))
 
 def pn(n):
-    print(n.id, n.title, n.text, n.dt_added, n.dt_edited)
+    print(n.id, n.user_id, n.local_id, n.title, n.text, n.dt_added, n.dt_edited)
     if len(n.tags) == 0:
         print('  no tags')
     else:
@@ -386,10 +389,13 @@ def pn(n):
             print(' ', t.id, t.user_id, t.tag_str)
 
 
-notes = Note.get_user_notes(2)
-for i in notes:
-    pn(i)
-    print()
+note = Note.get_note(3, 4)
+pn(note)
+
+# notes = Note.get_user_notes(3)
+# for i in notes:
+#     pn(i)
+#     print()
 
 # test_user = User(5, 'test@test.ru', None, None)
 # note = Note.add_note(test_user.id, f'Added2', f'Text', ['tag3', 'tag4'])
