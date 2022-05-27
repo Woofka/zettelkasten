@@ -4,6 +4,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, PasswordField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, Email
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+import markdown
+import md_extentions
 
 from db import User, Note
 
@@ -142,7 +144,10 @@ def note_page(note_local_id):
     if note is None:
         flash('Нет заметки с таким идентификатором')
         return abort(404)
-    return render_template('note.html', note=note)
+
+    md = markdown.markdown(note.text, extensions=['fenced_code', md_extentions.StrikeExtension()])
+
+    return render_template('note.html', note=note, md=md)
 
 
 def parse_tags(tags_data):

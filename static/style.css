@@ -1,0 +1,12 @@
+code {
+    background-color: lightgray;
+    border-radius: 0.2em;
+    color: black;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+pre {
+    background-color: lightgray;
+    border-radius: 0.2em;
+}
