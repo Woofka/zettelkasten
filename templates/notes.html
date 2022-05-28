@@ -1,29 +1,45 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h3>[WIP] Мои заметки</h3>
-  <br/>
-  <a class="btn btn-sm btn-success" href="{{ url_for('add_note') }}">Добавить заметку</a>
-  <br/><br/>
+  <div class="d-grid gap-2 d-lg-block">
+    <h3 class="col-auto me-auto">Мои заметки</h3>
 
-  {% for note in notes %}
-    <div class="card mb-2">
-      <a class="card-header" href="{{ url_for('note_page', note_local_id=note.local_id) }}">
-        {{ note.title }}
-      </a>
-      <div class="card-body">
-        {% if note.tags %}
-          <div class="mb-3">
-          {% for tag in note.tags %}
-          <a href="#" class="btn btn-sm btn-secondary rounded-pill px-3 mb-1">{{ tag.tag_str }}</a>
-          {% endfor %}
-          </div>
-        {% endif %}
-        <p class="card-text">{{ note.text }}</p>
-        <p class="card-text text-muted">
-          Note id: {{ note.id }} | User id: {{ note.user_id }} | Local id: {{ note.local_id }} | Added: {{ note.dt_added }} | Edited: {{ note.dt_edited }}
-        </p>
+  </div>
+
+  <div class="input-group mt-2">
+    <a class="btn btn-success" href="{{ url_for('add_note') }}">Добавить заметку</a>
+    <input type="text" class="form-control" placeholder="Поиск" aria-label="Поиск" aria-describedby="search-btn">
+    <button class="btn btn-outline-secondary" type="button" id="search-btn">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search mb-1" viewBox="0 0 16 16">
+        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+      </svg>
+    </button>
+  </div>
+
+  <br/>
+
+  {% if notes %}
+    {% for note in notes %}
+      <div class="card mb-2">
+        <a class="card-header" href="{{ url_for('note_page', note_local_id=note.local_id) }}">
+          {{ note.title }}
+        </a>
+        <div class="card-body">
+          {% if note.tags %}
+            <div class="mb-3">
+            {% for tag in note.tags %}
+            <a href="#" class="btn btn-sm btn-secondary rounded-pill px-3 mb-1">{{ tag.tag_str }}</a>
+            {% endfor %}
+            </div>
+          {% endif %}
+          <p class="card-text">{{ note.text }}</p>
+          <p class="card-text text-muted">
+            Note id: {{ note.id }} | User id: {{ note.user_id }} | Local id: {{ note.local_id }} | Added: {{ note.dt_added }} | Edited: {{ note.dt_edited }}
+          </p>
+        </div>
       </div>
-    </div>
-  {% endfor %}
+    {% endfor %}
+  {% else %}
+    <h4 class="text-center mt-4">Заметки не найдены</h4>
+  {% endif %}
 {% endblock %}
