@@ -42,6 +42,11 @@ class NoteForm(FlaskForm):
     submit = SubmitField('Создать')
 
 
+class SearchForm(FlaskForm):
+    q = StringField(validators=[DataRequired()])
+    submit = SubmitField('Найти')
+
+
 def is_safe_url(target):
     ref_url = urlparse(request.host_url)
     test_url = urlparse(urljoin(request.host_url, target))
@@ -130,11 +135,24 @@ def account():
     return render_template('account.html')
 
 
-@app.route('/notes')
+@app.route('/notes', methods=['GET'])
 @login_required
 def notes_page():
-    notes = Note.get_user_notes(current_user.id)
-    return render_template('notes.html', notes=notes)
+    form = SearchForm(request.args)
+    search_query = request.args.get('q', None)
+    filter_tag_id = request.args.get('t', None)
+    if search_query is not None:
+        notes = Note.search_notes(current_user.id, search_query)
+    elif filter_tag_id is not None:
+        try:
+            filter_tag_id = int(filter_tag_id)
+            notes = Note.get_notes_with_tag(filter_tag_id)
+        except ValueError:
+            notes = []
+    else:
+        notes = Note.get_user_notes(current_user.id)
+
+    return render_template('notes.html', notes=notes, form=form)
 
 
 @app.route('/note/<int:note_local_id>')

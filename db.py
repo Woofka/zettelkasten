@@ -395,6 +395,49 @@ class Note:
 
         return notes
 
+    @staticmethod
+    def search_notes(user_id, search_query):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        query = r"select id, user_id, local_id, title, text, dt_added, dt_edited " \
+                r"from notes " \
+                r"where user_id = %s and text like %s;"
+        cursor.execute(query, (user_id, '%' + search_query + '%'))
+        result = cursor.fetchall()
+        notes = []
+        for row in result:
+            tags = Tag.get_note_tags(row[0], conn_curs=(conn, cursor))
+            note = Note(row[0], row[1], row[2], row[3], row[4], row[5], row[6], tags)
+            notes.append(note)
+
+        cursor.close()
+        conn.close()
+
+        return notes
+
+    @staticmethod
+    def get_notes_with_tag(tag_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        query = r"select notes.id, user_id, local_id, title, text, dt_added, dt_edited " \
+                r"from notes " \
+                r"left join note_tags on notes.id = note_tags.note_id " \
+                r"where tag_id = %s;"
+        cursor.execute(query, (tag_id,))
+        result = cursor.fetchall()
+        notes = []
+        for row in result:
+            tags = Tag.get_note_tags(row[0], conn_curs=(conn, cursor))
+            note = Note(row[0], row[1], row[2], row[3], row[4], row[5], row[6], tags)
+            notes.append(note)
+
+        cursor.close()
+        conn.close()
+
+        return notes
+
 
 # print(User.is_email_used('test@test.ru'))
 # print(User.add_user('test3@test.ru', '1234'))

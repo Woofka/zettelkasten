@@ -6,7 +6,7 @@
   {% if note.tags %}
     <div class="mb-1">
     {% for tag in note.tags %}
-    <a href="#" class="btn btn-sm btn-secondary rounded-pill px-3 mb-1">{{ tag.tag_str }}</a>
+    <a href="{{ url_for('notes_page', t=tag.id) }}" class="btn btn-sm btn-secondary rounded-pill px-3 mb-1">{{ tag.tag_str }}</a>
     {% endfor %}
     </div>
   {% endif %}
