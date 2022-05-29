@@ -261,6 +261,10 @@ class Note:
     def __repr__(self):
         return f'<Note {self.id}>'
 
+    @property
+    def sorted_tags(self):
+        return sorted(list(self.tags), key=lambda x: x.tag_str)
+
     @staticmethod
     def add_note(user_id, title, text, tags_str):
         conn = get_db_connection()
@@ -382,7 +386,8 @@ class Note:
 
         query = r"select id, user_id, local_id, title, text, dt_added, dt_edited " \
                 r"from notes " \
-                r"where user_id = %s;"
+                r"where user_id = %s " \
+                r"order by local_id;"
         cursor.execute(query, (user_id,))
         result = cursor.fetchall()
         notes = []
@@ -424,7 +429,8 @@ class Note:
 
         query = r"select id, user_id, local_id, title, text, dt_added, dt_edited " \
                 r"from notes " \
-                r"where user_id = %s and text like %s;"
+                r"where user_id = %s and text like %s " \
+                r"order by local_id;"
         cursor.execute(query, (user_id, '%' + search_query + '%'))
         result = cursor.fetchall()
         notes = []
@@ -446,7 +452,8 @@ class Note:
         query = r"select notes.id, user_id, local_id, title, text, dt_added, dt_edited " \
                 r"from notes " \
                 r"left join note_tags on notes.id = note_tags.note_id " \
-                r"where tag_id = %s;"
+                r"where tag_id = %s " \
+                r"order by local_id;"
         cursor.execute(query, (tag_id,))
         result = cursor.fetchall()
         notes = []
@@ -459,52 +466,3 @@ class Note:
         conn.close()
 
         return notes
-
-
-# print(User.is_email_used('test@test.ru'))
-# print(User.add_user('test3@test.ru', '1234'))
-# print(User.get_user_by_id(5))
-# print(User.authenticate_user('test3@test.ru', '1234'))
-
-def pn(n):
-    print(n.id, n.user_id, n.local_id, n.title, n.text, n.dt_added, n.dt_edited)
-    if len(n.tags) == 0:
-        print('  no tags')
-    else:
-        for t in n.tags:
-            print(' ', t.id, t.user_id, t.tag_str)
-
-
-# note = Note.get_note(3, 4)
-# pn(note)
-
-# notes = Note.get_user_notes(3)
-# for i in notes:
-#     pn(i)
-#     print()
-
-# test_user = User(5, 'test@test.ru', None, None)
-# note = Note.add_note(test_user.id, f'Added2', f'Text', ['tag3', 'tag4'])
-# pn(note)
-# note = Note.update_note(note, note.title, note.text, ['tag3', 'tag2', 'tag5'])
-# pn(note)
-
-
-
-# for i in range(5):
-#     Note.add_note(test_user.id, f'Title{i}', f'Text{i}')
-
-# note = Note.get_note(2)
-# print(note.id, note.title, note.text, note.dt_added, note.dt_edited)
-# Note.update_note(note, None, None)
-# print(note.id, note.title, note.text, note.dt_added, note.dt_edited)
-
-# Note.delete_note(2)
-
-# notes = Note.get_user_notes(3)
-# for n in notes:
-#     print(n, n.tags)
-
-# tags = {Tag(1, 1, 'a'), Tag(2, 1, 'b'), Tag(3, 1, 'c')}
-# ids = sorted([t.tag_str for t in tags])
-# ids2 = sorted([t.tag_str for t in tags])

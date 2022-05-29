@@ -53,6 +53,18 @@ def is_safe_url(target):
     return test_url.scheme in ('http', 'https') and ref_url.netloc == test_url.netloc
 
 
+def parse_tags(tags_data):
+    tags_data = tags_data.strip().split('\n')
+    tags_str = []
+    for _str in tags_data:
+        _str = _str.strip()
+        if len(_str) > 50:
+            return None
+        if len(_str) > 0:
+            tags_str.append(_str)
+    return tags_str
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.get_user(user_id)
@@ -92,8 +104,6 @@ def register():
             login_user(user)
             flash('Вы были успешно зарегистированы!')
             return redirect(url_for('index'))
-    # TODO: else (if not valid)
-
     return render_template('register.html', form=form, email=email)
 
 
@@ -117,8 +127,6 @@ def login():
                 return abort(400)
 
             return redirect(next_page or url_for('index'))
-    # TODO: else (if not valid)
-
     return render_template('login.html', form=form, email=email)
 
 
@@ -167,18 +175,6 @@ def note_page(note_local_id):
     md = markdown.markdown(note.text, extensions=['fenced_code', md_extentions.StrikeExtension()])
 
     return render_template('note.html', note=note, md=md, links_from=links_from)
-
-
-def parse_tags(tags_data):
-    tags_data = tags_data.strip().split('\n')
-    tags_str = []
-    for _str in tags_data:
-        _str = _str.strip()
-        if len(_str) > 50:
-            return None
-        if len(_str) > 0:
-            tags_str.append(_str)
-    return tags_str
 
 
 @app.route('/add-note', methods=['GET', 'POST'])
