@@ -224,6 +224,28 @@ class Tag:
 
         return tags
 
+    @staticmethod
+    def get_user_tags(user_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        query = r"select tag_id, user_id, tag, count(tag_id) count " \
+                r"from user_tags " \
+                r"left join note_tags on note_tags.tag_id = user_tags.id " \
+                r"where user_id = %s and tag_id is not null " \
+                r"group by tag_id, user_id, tag " \
+                r"order by count desc, tag;"
+        cursor.execute(query, (user_id,))
+        result = cursor.fetchall()
+        tags = []
+        for row in result:
+            tags.append((Tag(row[0], row[1], row[2]), row[3]))
+
+        cursor.close()
+        conn.close()
+
+        return tags
+
 
 class Note:
     def __init__(self, note_id, user_id, local_id, title, text, dt_added, dt_edited, tags):

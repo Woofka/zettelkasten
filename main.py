@@ -7,7 +7,7 @@ from flask_login import LoginManager, login_user, logout_user, login_required, c
 import markdown
 import md_extentions
 
-from db import User, Note
+from db import User, Note, Tag
 
 
 app = Flask(__name__)
@@ -241,6 +241,13 @@ def delete_note(note_local_id):
     Note.delete_note(note.id)
     flash('Заметка успешно удалена')
     return redirect(url_for('notes_page'))
+
+
+@app.route('/tags')
+@login_required
+def tags_page():
+    tags = Tag.get_user_tags(current_user.id)
+    return render_template('tags.html', tags=tags)
 
 
 app.run('0.0.0.0', 80, True)

@@ -10,13 +10,12 @@
 
         {% if current_user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="{{url_for('notes_page')}}">Мои заметки</a>
+          <a class="nav-link" href="{{url_for('notes_page')}}">Заметки</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('tags_page') }}">Теги</a>
         </li>
         {% endif %}
-
-        <li class="nav-item">
-          <a class="nav-link" href="#">To be done</a>
-        </li>
       </ul>
 
       <ul class="navbar-nav mb-2 mb-lg-0">

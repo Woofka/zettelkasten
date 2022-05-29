@@ -1,10 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="d-grid gap-2 d-lg-block">
-    <h3 class="col-auto me-auto">Мои заметки</h3>
-
-  </div>
+  <h3>Заметки</h3>
 
   <form class="input-group mt-2" method="GET" action="{{ url_for('notes_page') }}">
     <a class="btn btn-success" href="{{ url_for('add_note') }}">Добавить заметку</a>
