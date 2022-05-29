@@ -9,7 +9,8 @@
 
           <div class="mb-3">
             <label for="title" class="form-label">Заголовок</label>
-            <input class="form-control" id="title" name="title" type="text" value="{{ form.title.data or '' }}" required>
+            <input class="form-control" id="title" name="title" type="text" value="{{ form.title.data or '' }}"
+                   required maxlength="200">
             <div class="invalid-feedback">
               Введите заголовок
             </div>
@@ -17,7 +18,7 @@
 
           <div class="mb-3">
             <label for="text" class="form-label">Текст заметки</label>
-            <textarea class="form-control font-monospace" rows="8" id="text" name="text" required
+            <textarea class="form-control font-monospace" rows="8" id="text" name="text" required maxlength="3000"
                       aria-describedby="text_help">{{ form.text.data or '' }}</textarea>
             <div class="invalid-feedback">
               Введите текст заметки

@@ -9,7 +9,8 @@
 
           <div class="mb-3">
             <label for="email" class="form-label">Электронная почта</label>
-            {{ form.email(class="form-control", type="email") }}
+            <input class="form-control" id="email" name="email" required type="email"
+                   value="{{ form.email.data or '' }}" maxlength="320">
             <div class="invalid-feedback">
               Введите электронную почту
             </div>
