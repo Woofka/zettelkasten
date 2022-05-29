@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h3>{{ note.title }}</h3>
+  <h3>#{{ note.local_id }} - {{ note.title }}</h3>
 
   {% if note.tags %}
     <div class="mb-1">
@@ -35,12 +35,4 @@
 
   <hr/>
   {{ md|safe }}
-
-  <hr/>
-  <p class="text-muted">
-    Debugging information: <br/>
-    Note id: {{ note.id }}<br/>
-    User id: {{ note.user_id }}<br/>
-    Local note id: {{ note.local_id }}
-  </p>
 {% endblock %}

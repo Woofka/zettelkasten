@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h1>Аккаунт {{ email }}!</h1>
+  <h3>Аккаунт</h3>
+  <label>Электронная почта</label>
+  <p>{{ current_user.email }}</p>
+  <label>Дата регистрации</label>
+  <p>{{ current_user.dt_added.strftime('%d.%m.%Y %H:%M:%S') }}</p>
 {% endblock %}

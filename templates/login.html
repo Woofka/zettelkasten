@@ -4,25 +4,31 @@
   <div class="card">
     <h5 class="card-header">Вход</h5>
     <div class="card-body">
-        <form method="POST">
+        <form class="needs-validation" novalidate method="POST">
           {{ form.hidden_tag() }}
 
           <div class="mb-3">
             <label for="email" class="form-label">Электронная почта</label>
             {{ form.email(class="form-control", type="email") }}
+            <div class="invalid-feedback">
+              Введите электронную почту
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="password" class="form-label">Пароль</label>
             {{ form.password(type="password", class="form-control") }}
+            <div class="invalid-feedback">
+              Введите пароль
+            </div>
           </div>
 
           <div class="mb-3 form-check">
-            {{ form.rememberme(type="checkbox", class="form-check-input") }}
+            {{ form.rememberme(type="checkbox", class="form-check-input no-validate") }}
             <label class="form-check-label" for="rememberme">Запомнить меня</label>
           </div>
 
-          {{ form.submit(class='btn btn-secondary') }}
+          {{ form.submit(class='btn btn-success') }}
         </form>
     </div>
   </div>

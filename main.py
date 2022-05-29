@@ -227,7 +227,7 @@ def edit_note(note_local_id):
             else:
                 flash('Изменения сохранены')
             return redirect(url_for('note_page', note_local_id=note_local_id))
-    return render_template('edit_note.html', form=form)
+    return render_template('edit_note.html', form=form, note_local_id=note_local_id)
 
 
 @app.route('/delete-note/<int:note_local_id>', methods=['GET', 'POST'])

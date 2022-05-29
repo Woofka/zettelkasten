@@ -1,31 +1,42 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <h3>[WIP] Добавление заметки</h3><br/>
-
   <div class="card">
-    <h5 class="card-header">Создание заметки</h5>
+    <h5 class="card-header">Добавление заметки</h5>
     <div class="card-body">
-        <form method="POST">
+        <form class="needs-validation" novalidate method="POST">
           {{ form.hidden_tag() }}
 
           <div class="mb-3">
-            <label for="title" class="form-label">Название</label>
-            {{ form.title(class="form-control") }}
+            <label for="title" class="form-label">Заголовок</label>
+            <input class="form-control" id="title" name="title" type="text" value="{{ form.title.data or '' }}" required>
+            <div class="invalid-feedback">
+              Введите заголовок
+            </div>
           </div>
 
           <div class="mb-3">
             <label for="text" class="form-label">Текст заметки</label>
-            {{ form.text(class="form-control font-monospace") }}
+            <textarea class="form-control font-monospace" rows="8" id="text" name="text" required
+                      aria-describedby="text_help">{{ form.text.data or '' }}</textarea>
+            <div class="invalid-feedback">
+              Введите текст заметки
+            </div>
+            <div class="form-text" id="text_help">Текст заметки поддерживает синтаксис markdown</div>
           </div>
 
           <div class="mb-3">
             <label for="tags" class="form-label">Теги</label>
-            {{ form.tags(class="form-control") }}
-            <div class="form-text">Вводите теги на разных строчках</div>
+            <textarea class="form-control" rows="4" id="tags" name="tags" oninput="tagsValidation(this)"
+                      aria-describedby="tags_help">{{ form.tags.data or '' }}</textarea>
+            <div class="invalid-feedback">
+              Тег не должен быть длиннее 50 символов
+            </div>
+            <div id="tags_help" class="form-text">Вводите теги на разных строчках</div>
           </div>
 
           {{ form.submit(class='btn btn-success') }}
+          <a class="btn btn-danger" href="{{ url_for('notes_page') }}">Отмена</a>
         </form>
     </div>
   </div>
