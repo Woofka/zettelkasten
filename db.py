@@ -374,6 +374,27 @@ class Note:
 
         return notes
 
+    @staticmethod
+    def get_notes_linked_to(user_id, local_note_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        query = r"select id, user_id, local_id, title " \
+                r"from notes " \
+                r"where user_id = %s and text like '%%[%%](%s)%%' " \
+                r"order by local_id;"
+        cursor.execute(query, (user_id, local_note_id))
+        result = cursor.fetchall()
+        notes = []
+        for row in result:
+            note = Note(row[0], row[1], row[2], row[3], None, None, None, set())
+            notes.append(note)
+
+        cursor.close()
+        conn.close()
+
+        return notes
+
 
 # print(User.is_email_used('test@test.ru'))
 # print(User.add_user('test3@test.ru', '1234'))

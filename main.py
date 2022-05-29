@@ -145,9 +145,10 @@ def note_page(note_local_id):
         flash('Нет заметки с таким идентификатором')
         return abort(404)
 
+    links_from = Note.get_notes_linked_to(current_user.id, note.local_id)
     md = markdown.markdown(note.text, extensions=['fenced_code', md_extentions.StrikeExtension()])
 
-    return render_template('note.html', note=note, md=md)
+    return render_template('note.html', note=note, md=md, links_from=links_from)
 
 
 def parse_tags(tags_data):
