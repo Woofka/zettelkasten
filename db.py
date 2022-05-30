@@ -6,7 +6,7 @@ from flask_login import UserMixin
 
 def get_db_connection():
     conn = psycopg2.connect(
-        host='127.0.0.1',
+        host='db',
         port=5432,
         database='zettelkasten',
         user='app',

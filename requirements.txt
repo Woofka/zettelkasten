@@ -2,5 +2,5 @@ flask==2.0.1
 flask-wtf==1.0.1
 flask-login==0.6.1
 email-validator==1.2.1
-psycopg2==2.9.3
+psycopg2-binary==2.9.3
 markdown==3.3.7

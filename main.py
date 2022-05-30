@@ -246,4 +246,4 @@ def tags_page():
     return render_template('tags.html', tags=tags)
 
 
-app.run('0.0.0.0', 80, True)
+app.run('0.0.0.0', 80, False)
