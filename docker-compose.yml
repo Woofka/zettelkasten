@@ -2,9 +2,11 @@ version: '3'
 
 services:
   web:
-    build:
-      dockerfile: Dockerfile
+    build: .
     container_name: web
+    volumes:
+      - ./static:/app/static
+      - ./templates:/app/templates
     ports:
       - "80:80"
     restart: unless-stopped
