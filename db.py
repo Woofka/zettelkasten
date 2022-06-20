@@ -429,9 +429,10 @@ class Note:
 
         query = r"select id, user_id, local_id, title, text, dt_added, dt_edited " \
                 r"from notes " \
-                r"where user_id = %s and text like %s " \
+                r"where user_id = %s and (text ilike %s or title ilike %s) " \
                 r"order by local_id;"
-        cursor.execute(query, (user_id, '%' + search_query + '%'))
+        search_insert = '%' + search_query + '%'
+        cursor.execute(query, (user_id, search_insert, search_insert))
         result = cursor.fetchall()
         notes = []
         for row in result:

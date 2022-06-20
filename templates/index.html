@@ -1,8 +1,113 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="text-center">
-    <h1>Zettelkasten</h1>
-    <p>Какая-то информация про сайт</p>
+
+  <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+    <symbol id="markdown" viewBox="0 0 16 16">
+      <path d="M0 4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V4zm11.5 1a.5.5 0 0 0-.5.5v3.793L9.854 8.146a.5.5 0 1 0-.708.708l2 2a.5.5 0 0 0 .708 0l2-2a.5.5 0 0 0-.708-.708L12 9.293V5.5a.5.5 0 0 0-.5-.5zM3.56 7.01h.056l1.428 3.239h.774l1.42-3.24h.056V11h1.073V5.001h-1.2l-1.71 3.894h-.039l-1.71-3.894H2.5V11h1.06V7.01z"/>
+    </symbol>
+    <symbol id="search" viewBox="0 0 16 16">
+      <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"></path>
+    </symbol>
+    <symbol id="tag" viewBox="0 0 16 16">
+      <path d="M2 2v13.5a.5.5 0 0 0 .74.439L8 13.069l5.26 2.87A.5.5 0 0 0 14 15.5V2a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2z"/>
+    </symbol>
+    <symbol id="link" viewBox="0 0 16 16">
+      <path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/>
+      <path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/>
+    </symbol>
+  </svg>
+
+  <div class="px-4 my-3 text-center border-bottom">
+    <h1 class="display-4 fw-bold">Zettelkasten</h1>
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">
+        Ваш универсальный помощник в ведении заметок и управлении личными знаниями в исследованиях и учебе
+      </p>
+      <div class="d-grid gap-2 d-sm-flex justify-content-sm-center mb-5">
+        <a class="btn btn-secondary btn-lg px-4 me-sm-3" href="{{ url_for('register') }}">Регистрация</a>
+        <a class="btn btn-outline-secondary btn-lg px-4" href="{{ url_for('login') }}">Вход</a>
+      </div>
+    </div>
   </div>
+
+  <div class="container col-xxl-8 px-4 py-3 border-bottom">
+    <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6">
+        <img src="{{ url_for('static', filename='Niklas_Luhmann.jpeg') }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Никлас Луманн</h1>
+        <p class="lead">
+          Выдающийся немецкий социолог 20-го века, разработавший метод ведения заметок Zettelkasten (нем.: <i>картотека</i>).
+          Данный метод позволил Никласу Луманну вести беспрецедентную пубкликационную активность.
+        </p>
+        <blockquote class="lead">
+          Я не думаю, что всё это происходит само по себе, но это происходит в основном в картотеке. [...]
+          Моя продуктивность, по сути, объясняется системой картотечных ящиков. [...]
+          Эти ящики стоят мне больше времени, чем написание книг.
+        </blockquote>
+      </div>
+    </div>
+  </div>
+
+  <div class="container col-xxl-8 px-4 py-3 border-bottom">
+    <div class="row flex-lg-row align-items-center g-5 py-5">
+      <div class="col-10 col-sm-8 col-lg-6">
+        <img src="{{ url_for('static', filename='notes.png') }}" class="d-block mx-lg-auto img-fluid" alt="Bootstrap Themes" width="700" height="500" loading="lazy">
+      </div>
+      <div class="col-lg-6">
+        <h1 class="display-5 fw-bold lh-1 mb-3">Всё связано</h1>
+        <p class="lead">
+          Человеческий мозг нелинеен: мы всё время перескакиваем от идеи к идее. Zettelkasten устроен так же.
+        </p>
+        <p class="lead">
+          Ведите заметки и связывайте их друг с другом, формируя сеть взаимосвязей, создавая своего рода второй мозг.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container px-4 py-3 border-bottom" id="icon-grid">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4 py-5">
+      <div class="col d-flex align-items-start">
+        <svg class="bi feature-icon flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#markdown"/></svg>
+        <div>
+          <h4 class="fw-bold mb-0">Markdown</h4>
+          <p>Используйте Markdown для форматирования заметок.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <svg class="bi feature-icon flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#link"/></svg>
+        <div>
+          <h4 class="fw-bold mb-0">Ссылки</h4>
+          <p>Ссылайтесь на другие заметки, связывая их в сеть.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <svg class="bi feature-icon flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#tag"/></svg>
+        <div>
+          <h4 class="fw-bold mb-0">Теги</h4>
+          <p>Группируйте заметки по смыслу или предметной области с помощью тегов.</p>
+        </div>
+      </div>
+      <div class="col d-flex align-items-start">
+        <svg class="bi feature-icon flex-shrink-0 me-3" width="1.75em" height="1.75em"><use xlink:href="#search"/></svg>
+        <div>
+          <h4 class="fw-bold mb-0">Поиск</h4>
+          <p>Ищите нужные заметки, чтобы найти ответы на Ваши вопросы.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="px-4 my-5 text-center">
+    <div class="col-lg-6 mx-auto">
+      <p class="lead mb-4">
+        Попробуйте Zettelkasten и начните формировать Ваш второй мозг уже сейчас
+      </p>
+      <a class="btn btn-secondary btn-lg px-4 me-sm-3 mb-3" href="{{ url_for('register') }}">Регистрация</a>
+    </div>
+  </div>
+
 {% endblock %}

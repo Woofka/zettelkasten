@@ -126,7 +126,7 @@ def login():
             if not is_safe_url(next_page):
                 return abort(400)
 
-            return redirect(next_page or url_for('index'))
+            return redirect(next_page or url_for('notes_page'))
     return render_template('login.html', form=form, email=email)
 
 
